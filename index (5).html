@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakura Sushi — Menú</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0A0A0A;
+      --dark:    #141414;
+      --card:    #1C1C1C;
+      --ivory:   #F5F0E8;
+      --muted:   #9A9488;
+      --red:     #C0392B;
+      --gold:    #D4A843;
+      --border:  #2A2A2A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--ivory);
+    }
+
+    .logo span { color: var(--gold); }
+
+    nav { display: flex; gap: 2rem; }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 60%, rgba(192,57,43,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 20%, rgba(212,168,67,0.06) 0%, transparent 60%);
+    }
+
+    .kanji {
+      font-size: 6rem;
+      line-height: 1;
+      opacity: 0.06;
+      position: absolute;
+      top: 12%;
+      right: 8%;
+      font-family: serif;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 40ch;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .btn-scroll {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.75rem 2rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-scroll:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 3rem;
+      margin: 4rem 0 3rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    .divider-icon { color: var(--gold); font-size: 1.1rem; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 600;
+      margin-bottom: 3rem;
+    }
+
+    /* ── MENU SECTIONS ── */
+    .menu-section {
+      padding: 2rem 3rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.75rem;
+      position: relative;
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: rgba(212,168,67,0.4);
+      transform: translateY(-3px);
+    }
+
+    .card-tag {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.25);
+      padding: 0.25rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    .card-tag.hot { color: var(--red); background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.25); }
+    .card-tag.veg { color: #7DB77D; background: rgba(125,183,125,0.08); border-color: rgba(125,183,125,0.25); }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      padding-right: 5rem;
+    }
+
+    .card .jp-name {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--ivory);
+    }
+
+    .price sup { font-size: 0.7em; color: var(--gold); vertical-align: super; }
+
+    .pieces {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── FEATURED CARD ── */
+    .card-featured {
+      background: linear-gradient(135deg, #1f1610 0%, #1C1C1C 100%);
+      border-color: rgba(212,168,67,0.3);
+      grid-column: span 2;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 680px) { .card-featured { grid-column: span 1; flex-direction: column; } }
+
+    .card-featured .feat-badge {
+      flex-shrink: 0;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.3);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .card-featured .feat-badge span {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.3rem;
+      display: block;
+    }
+
+    .card-featured .feat-content { flex: 1; }
+
+    /* ── DRINKS ── */
+    .drinks-list { display: flex; flex-direction: column; gap: 0; }
+
+    .drink-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+
+    .drink-row:hover .drink-name { color: var(--gold); }
+
+    .drink-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+
+    .drink-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+
+    .drink-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--gold);
+      white-space: nowrap;
+      margin-left: 1.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 5rem;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      text-align: center;
+    }
+
+    footer .logo { font-size: 1.2rem; }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 45ch;
+      line-height: 1.8;
+    }
+
+    footer .contact {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    footer .contact a { color: var(--gold); text-decoration: none; }
+
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 1rem 1.5rem; }
+      nav { gap: 1rem; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .menu-section { padding: 1.5rem 1.5rem 3rem; }
+      .divider { padding: 0 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      nav { display: none; }
+      .kanji { font-size: 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">Sakura <span>桜</span> Sushi</div>
+    <nav>
+      <a href="#rolls">Rolls</a>
+      <a href="#nigiris">Nigiris</a>
+      <a href="#entradas">Entradas</a>
+      <a href="#bebidas">Bebidas</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="kanji">桜寿司</div>
+    <p class="hero-eyebrow">Experiencia japonesa auténtica</p>
+    <h1>El arte del<br /><em>sushi</em> en cada<br />bocado</h1>
+    <p>Ingredientes frescos, técnica tradicional y una selección cuidadosamente curada para cada paladar.</p>
+    <a href="#rolls" class="btn-scroll">Ver menú completo ↓</a>
+  </section>
+
+  <!-- ═══════════════ ROLLS ═══════════════ -->
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <section class="menu-section" id="rolls">
+    <span class="section-label fade-in">Especialidades</span>
+    <h2 class="section-title fade-in">Rolls & Makis</h2>
+
+    <div class="grid-2">
+
+      <!-- Featured -->
+      <div class="card card-featured fade-in">
+        <div class="feat-badge">🌸 <span>Chef's Pick</span></div>
+        <div class="feat-content">
+          <h3>Sakura Signature Roll</h3>
+          <p class="jp-name">さくらロール</p>
+          <p>Salmón sellado, aguacate cremoso, pepino y queso Philadelphia, cubierto con tobiko naranja y salsa ponzu trufa negra.</p>
+          <div class="card-footer">
+            <div class="price"><sup>$</sup>285</div>
+            <span class="pieces">8 piezas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag hot">🌶 Picante</span>
+        <h3>Dragon Fire Roll</h3>
+        <p class="jp-name">ドラゴンロール</p>
+        <p>Camarón tempura, aguacate y pepino, cubierto con atún spicy y aceite de sriracha.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>240</div>
+          <span class="pieces">8 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Clásico</span>
+        <h3>California Roll</h3>
+        <p class="jp-name">カリフォルニアロール</p>
+        <p>Cangrejo real, aguacate y pepino con semillas de ajonjolí tostado. El clásico por excelencia.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>160</div>
+          <span class="pieces">8 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag hot">🌶 Picante</span>
+        <h3>Tuna Spicy Roll</h3>
+        <p class="jp-name">スパイシーツナ</p>
+        <p>Atún rojo fresco picado con mayonesa spicy, pepino y cebollín, envuelto en nori premium.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>195</div>
+          <span class="pieces">8 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag veg">🌿 Vegano</span>
+        <h3>Garden Roll</h3>
+        <p class="jp-name">ガーデンロール</p>
+        <p>Aguacate, mango, pepino, zanahoria y rábano daikon marinado. Fresco y ligero.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>145</div>
+          <span class="pieces">8 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Premium</span>
+        <h3>Lobster Tempura Roll</h3>
+        <p class="jp-name">ロブスターロール</p>
+        <p>Cola de langosta en tempura, aguacate, mango y mayonesa yuzu, cubierto con masago dorado.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>380</div>
+          <span class="pieces">8 piezas</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ NIGIRIS ═══════════════ -->
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <section class="menu-section" id="nigiris">
+    <span class="section-label fade-in">Tradición</span>
+    <h2 class="section-title fade-in">Nigiris & Sashimi</h2>
+
+    <div class="grid-3">
+
+      <div class="card fade-in">
+        <h3>Nigiri de Salmón</h3>
+        <p class="jp-name">サーモンにぎり</p>
+        <p>Salmón atlántico fresco sobre arroz de sushi sazonado con vinagre de arroz.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>90</div>
+          <span class="pieces">2 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Premium</span>
+        <h3>Nigiri de Atún Rojo</h3>
+        <p class="jp-name">まぐろにぎり</p>
+        <p>Atún de aleta azul de primera calidad. Suave, magro y de sabor profundo.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>130</div>
+          <span class="pieces">2 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <h3>Nigiri de Camarón</h3>
+        <p class="jp-name">えびにぎり</p>
+        <p>Camarón tigre cocido, ligeramente prensado sobre el arroz con toque de wasabi.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>85</div>
+          <span class="pieces">2 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Temporada</span>
+        <h3>Nigiri de Pulpo</h3>
+        <p class="jp-name">たこにぎり</p>
+        <p>Pulpo cocido lentamente, tierno y con sabor marino, servido con sal de mar y limón.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>95</div>
+          <span class="pieces">2 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <h3>Sashimi de Salmón</h3>
+        <p class="jp-name">サーモン刺し身</p>
+        <p>Filetes finos de salmón fresco, servidos con jengibre encurtido y wasabi artesanal.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>185</div>
+          <span class="pieces">5 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Premium</span>
+        <h3>Sashimi Mixto</h3>
+        <p class="jp-name">刺し身盛り合わせ</p>
+        <p>Selección del chef con atún, salmón, hamachi y pulpo. La mejor presentación.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>320</div>
+          <span class="pieces">10 piezas</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ ENTRADAS ═══════════════ -->
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <section class="menu-section" id="entradas">
+    <span class="section-label fade-in">Para comenzar</span>
+    <h2 class="section-title fade-in">Entradas & Sopas</h2>
+
+    <div class="grid-3">
+
+      <div class="card fade-in">
+        <h3>Edamame</h3>
+        <p class="jp-name">枝豆</p>
+        <p>Vainas de soya al vapor con sal de mar y aceite de sésamo tostado. Fresco y sencillo.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>65</div>
+          <span class="pieces">porción</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <h3>Gyoza</h3>
+        <p class="jp-name">餃子</p>
+        <p>Dumplings de cerdo y col rizada, dorados en sartén y servidos con salsa ponzu.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>120</div>
+          <span class="pieces">6 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag hot">🌶 Picante</span>
+        <h3>Takoyaki</h3>
+        <p class="jp-name">たこ焼き</p>
+        <p>Bolitas de pulpo estilo Osaka con salsa okonomiyaki, mayo y bonito en hojuelas.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>135</div>
+          <span class="pieces">6 piezas</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <h3>Sopa Miso</h3>
+        <p class="jp-name">みそ汁</p>
+        <p>Caldo de dashi con pasta de miso blanco, tofu sedoso, wakame y cebollín.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>75</div>
+          <span class="pieces">tazón</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <h3>Ensalada Wakame</h3>
+        <p class="jp-name">わかめサラダ</p>
+        <p>Alga marina marinada con aderezo de sésamo, jengibre fresco y cebolla morada.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>85</div>
+          <span class="pieces">porción</span>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <span class="card-tag">Favorito</span>
+        <h3>Karaage</h3>
+        <p class="jp-name">唐揚げ</p>
+        <p>Pollo marinado en sake y jengibre, frito crocante. Servido con mayo yuzu y limón.</p>
+        <div class="card-footer">
+          <div class="price"><sup>$</sup>150</div>
+          <span class="pieces">porción</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════ BEBIDAS ═══════════════ -->
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <section class="menu-section" id="bebidas">
+    <span class="section-label fade-in">Para beber</span>
+    <h2 class="section-title fade-in">Bebidas</h2>
+
+    <div class="grid-2 fade-in">
+
+      <div>
+        <p style="font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Sake & Vinos</p>
+        <div class="drinks-list">
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Sake Junmai Daiginjo</div>
+              <div class="drink-sub">Frutado y floral — copa / botella</div>
+            </div>
+            <div class="drink-price">$95 / $420</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Sake Nigori</div>
+              <div class="drink-sub">Sin filtrar, cremoso y suave</div>
+            </div>
+            <div class="drink-price">$85 / $370</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Sake Caliente (Atsukan)</div>
+              <div class="drink-sub">Tokkuri tradicional de 180 ml</div>
+            </div>
+            <div class="drink-price">$110</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Vino Blanco Riesling</div>
+              <div class="drink-sub">Alemania — copa</div>
+            </div>
+            <div class="drink-price">$120</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Cócteles & Sin Alcohol</p>
+        <div class="drinks-list">
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Yuzu Margarita</div>
+              <div class="drink-sub">Tequila, yuzu, triple sec, sal de chili</div>
+            </div>
+            <div class="drink-price">$145</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Lychee Martini</div>
+              <div class="drink-sub">Vodka, licor de lychee, lima</div>
+            </div>
+            <div class="drink-price">$155</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Matcha Latte</div>
+              <div class="drink-sub">Matcha ceremonial con leche de avena</div>
+            </div>
+            <div class="drink-price">$75</div>
+          </div>
+          <div class="drink-row">
+            <div>
+              <div class="drink-name">Agua de Jamaica</div>
+              <div class="drink-sub">Con jengibre y toque de yuzu</div>
+            </div>
+            <div class="drink-price">$55</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">Sakura <span style="color:var(--gold)">桜</span> Sushi</div>
+    <p>Reservaciones recomendadas. Abierto de martes a domingo, 1:00 pm – 11:00 pm. Precios en pesos mexicanos incluyen IVA.</p>
+    <div class="contact">
+      📍 Av. Chapultepec 230, Guadalajara &nbsp;|&nbsp;
+      📞 <a href="tel:+523312345678">+52 33 1234 5678</a> &nbsp;|&nbsp;
+      ✉ <a href="mailto:reservas@sakurasushi.mx">reservas@sakurasushi.mx</a>
+    </div>
+    <p style="font-size:0.7rem;color:#444;">© 2026 Sakura Sushi. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // Fade-in on scroll
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
